@@ -1,9 +1,9 @@
-function AddCustomDateFilterBtn(){
+function AddCustomDateFilterBtn(el){
     var label='Date Range: ';
     var button='<a class="btn btn-hollow btn-sm date-range between" href="javascript://"  title="Apply this date filter" data-filter="xy">Apply Filter</a>';
     var fields='<input type="text" id="start" placeholder="Start Date" /><input type="text" id="end" placeholder="End Date" />';
     var tpl = label+fields+button;
-    $('controls-top').insertAdjacentHTML("beforeend", tpl);
+    el.insertAdjacentHTML("beforeend", tpl);
 
     var picker = new Pikaday({
         field: document.getElementById('start'),
@@ -28,6 +28,13 @@ function AddCustomDateFilterBtn(){
         }
     });
 }
+
+function AddControls(el, id){
+  var tpl='<div class="controls clearfix" id="{0}"></div>';
+  var div=tpl.format(id);
+  el.insertAdjacentHTML("afterend",div);
+}
+
 function AddDateFilterBtn(el,description,filterCode){
     var title="Apply this date filter";
     var tpl='<a class="btn btn-hollow btn-sm date-range" href="javascript://"  title="{0}" data-filter="{2}">{1}</a>';
@@ -152,11 +159,14 @@ function SetFilter(objDates){
         var transactionControls = $('controls-top');
         var hasButtons=document.querySelectorAll('a.date-range').length>0;
         if (transactionControls != undefined && !hasButtons ) {
-            AddDateFilterBtn(transactionControls,"This Week","tw");
-            AddDateFilterBtn(transactionControls,"Last Week","lw");
-            AddDateFilterBtn(transactionControls,"This Month","tm");
-            AddDateFilterBtn(transactionControls,"Last Month","lm");
-            AddCustomDateFilterBtn();
+            AddControls(transactionControls,'controls-mid');
+            var transactionControlsMid = $('controls-mid');
+            AddDateFilterBtn(transactionControlsMid,"This Week","tw");
+            AddDateFilterBtn(transactionControlsMid,"Last Week","lw");
+            AddDateFilterBtn(transactionControlsMid,"This Month","tm");
+            AddDateFilterBtn(transactionControlsMid,"Last Month","lm");
+            AddControls(transactionControlsMid,'controls-btm');
+            AddCustomDateFilterBtn($('controls-btm'));
             bindDateFilterHandlers();
             observer.hasTransactions=true;
             observer.disconnect();
